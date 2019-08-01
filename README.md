@@ -1,0 +1,2 @@
+# dsdt
+laptop dsdt patching
