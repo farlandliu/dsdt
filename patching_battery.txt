@@ -1,0 +1,139 @@
+
+// 16-bit registers
+into device label EC0 code_regex MCUR,\s+16, replace_matched begin MCU0,8,MCU1,8, end;
+into device label EC0 code_regex MBRM,\s+16, replace_matched begin MBR0,8,MBR1,8, end;
+into device label EC0 code_regex MBVG,\s+16, replace_matched begin MBV0,8,MBV1,8, end;
+into device label EC0 code_regex ACUR,\s+16, replace_matched begin ACU0,8,ACU1,8, end;
+into device label EC0 code_regex ABRM,\s+16, replace_matched begin ABR0,8,ABR1,8, end;
+into device label EC0 code_regex ABVG,\s+16, replace_matched begin ABV0,8,ABV1,8, end;
+into device label EC0 code_regex B1FC,\s+16, replace_matched begin B1F0,8,B1F1,8, end;
+into device label EC0 code_regex B2FC,\s+16, replace_matched begin B2F0,8,B2F1,8, end;
+
+// fix 16-bit methods
+
+into method label UPBS code_regex \(\^\^PCI0\.LPCB\.EC0\.MCUR, replaceall_matched begin (B1B2(^^PCI0.LPCB.EC0.MCU0, ^^PCI0.LPCB.EC0.MCU1), end;
+
+into method label UPBS code_regex \(\^\^PCI0\.LPCB\.EC0\.MBRM, replaceall_matched begin (B1B2(^^PCI0.LPCB.EC0.MBR0, ^^PCI0.LPCB.EC0.MBR1), end;
+
+into method label UPBS code_regex \(\^\^PCI0\.LPCB\.EC0\.MBVG, replaceall_matched begin (B1B2(^^PCI0.LPCB.EC0.MBV0, ^^PCI0.LPCB.EC0.MBV1), end;
+
+
+into method label UPB2 code_regex \(\^\^PCI0\.LPCB\.EC0\.ACUR, replaceall_matched begin (B1B2(^^PCI0.LPCB.EC0.ACU0, ^^PCI0.LPCB.EC0.ACU1), end;
+
+into method label UPB2 code_regex \(\^\^PCI0\.LPCB\.EC0\.ABRM, replaceall_matched begin (B1B2(^^PCI0.LPCB.EC0.ABR0, ^^PCI0.LPCB.EC0.ABR1), end;
+
+into method label UPB2 code_regex \(\^\^PCI0\.LPCB\.EC0\.ABVG, replaceall_matched begin (B1B2(^^PCI0.LPCB.EC0.ABV0, ^^PCI0.LPCB.EC0.ABV1), end;
+
+into method label SMTF code_regex B1FC, replaceall_matched begin B1B2(B1F0, B1F1), end;
+into method label SMTF code_regex B2FC, replaceall_matched begin B1B2(B2F0, B2F1), end;
+
+
+into method label UPBI code_regex \(\^\^PCI0\.LPCB\.EC0\.B1FC, replaceall_matched begin (B1B2(^^PCI0.LPCB.EC0.B1F0, ^^PCI0.LPCB.EC0.B1F1), end;
+
+into method label UPI2 code_regex \(\^\^PCI0\.LPCB\.EC0\.B2FC, replaceall_matched begin (B1B2(^^PCI0.LPCB.EC0.B2F0, ^^PCI0.LPCB.EC0.B2F1), end;
+
+//# method to read from 16-bit fields
+into method label B1B2 remove_entry;
+into definitionblock code_regex . insert
+begin
+Method (B1B2, 2, NotSerialized) { Return (Or (Arg0, ShiftLeft (Arg1, 8))) }
+end;
+
+
+//# deal with 256-bit SMD0
+into device label EC0 code_regex SMD0,\s+256 replace_matched
+begin
+SD00,8,SD01,8,SD02,8,SD03,8,
+SD04,8,SD05,8,SD06,8,SD07,8,
+SD08,8,SD09,8,SD0A,8,SD0B,8,
+SD0C,8,SD0D,8,SD0E,8,SD0F,8,
+SD10,8,SD11,8,SD12,8,SD13,8,
+SD14,8,SD15,8,SD16,8,SD17,8,
+SD18,8,SD19,8,SD1A,8,SD1B,8,
+SD1C,8,SD1D,8,SD1E,8,SD1F,8
+end;
+
+into device label EC0 insert
+begin
+Method (RSMD, 0, Serialized)
+{
+    Name (TEMP, Buffer(0x20) { })
+    Store (SD00, Index(TEMP, 0x00))
+    Store (SD01, Index(TEMP, 0x01))
+    Store (SD02, Index(TEMP, 0x02))
+    Store (SD03, Index(TEMP, 0x03))
+    Store (SD04, Index(TEMP, 0x04))
+    Store (SD05, Index(TEMP, 0x05))
+    Store (SD06, Index(TEMP, 0x06))
+    Store (SD07, Index(TEMP, 0x07))
+    Store (SD08, Index(TEMP, 0x08))
+    Store (SD09, Index(TEMP, 0x09))
+    Store (SD0A, Index(TEMP, 0x0A))
+    Store (SD0B, Index(TEMP, 0x0B))
+    Store (SD0C, Index(TEMP, 0x0C))
+    Store (SD0D, Index(TEMP, 0x0D))
+    Store (SD0E, Index(TEMP, 0x0E))
+    Store (SD0F, Index(TEMP, 0x0F))
+    Store (SD10, Index(TEMP, 0x10))
+    Store (SD11, Index(TEMP, 0x11))
+    Store (SD12, Index(TEMP, 0x12))
+    Store (SD13, Index(TEMP, 0x13))
+    Store (SD14, Index(TEMP, 0x14))
+    Store (SD15, Index(TEMP, 0x15))
+    Store (SD16, Index(TEMP, 0x16))
+    Store (SD17, Index(TEMP, 0x17))
+    Store (SD18, Index(TEMP, 0x18))
+    Store (SD19, Index(TEMP, 0x19))
+    Store (SD1A, Index(TEMP, 0x1A))
+    Store (SD1B, Index(TEMP, 0x1B))
+    Store (SD1C, Index(TEMP, 0x1C))
+    Store (SD1D, Index(TEMP, 0x1D))
+    Store (SD1E, Index(TEMP, 0x1E))
+    Store (SD1F, Index(TEMP, 0x1F))
+    Return (TEMP)
+}
+end;
+
+into device label EC0 insert
+begin
+Method (WSMD, 1, Serialized)
+{
+    Name (TEMP, Buffer(0x20) { })
+    Store (Arg0, TEMP)
+    Store (DerefOf(Index(TEMP, 0x00)), SD00)
+    Store (DerefOf(Index(TEMP, 0x01)), SD01)
+    Store (DerefOf(Index(TEMP, 0x02)), SD02)
+    Store (DerefOf(Index(TEMP, 0x03)), SD03)
+    Store (DerefOf(Index(TEMP, 0x04)), SD04)
+    Store (DerefOf(Index(TEMP, 0x05)), SD05)
+    Store (DerefOf(Index(TEMP, 0x06)), SD06)
+    Store (DerefOf(Index(TEMP, 0x07)), SD07)
+    Store (DerefOf(Index(TEMP, 0x08)), SD08)
+    Store (DerefOf(Index(TEMP, 0x09)), SD09)
+    Store (DerefOf(Index(TEMP, 0x0A)), SD0A)
+    Store (DerefOf(Index(TEMP, 0x0B)), SD0B)
+    Store (DerefOf(Index(TEMP, 0x0C)), SD0C)
+    Store (DerefOf(Index(TEMP, 0x0D)), SD0D)
+    Store (DerefOf(Index(TEMP, 0x0E)), SD0E)
+    Store (DerefOf(Index(TEMP, 0x0F)), SD0F)
+    Store (DerefOf(Index(TEMP, 0x10)), SD10)
+    Store (DerefOf(Index(TEMP, 0x11)), SD11)
+    Store (DerefOf(Index(TEMP, 0x12)), SD12)
+    Store (DerefOf(Index(TEMP, 0x13)), SD13)
+    Store (DerefOf(Index(TEMP, 0x14)), SD14)
+    Store (DerefOf(Index(TEMP, 0x15)), SD15)
+    Store (DerefOf(Index(TEMP, 0x16)), SD16)
+    Store (DerefOf(Index(TEMP, 0x17)), SD17)
+    Store (DerefOf(Index(TEMP, 0x18)), SD18)
+    Store (DerefOf(Index(TEMP, 0x19)), SD19)
+    Store (DerefOf(Index(TEMP, 0x1A)), SD1A)
+    Store (DerefOf(Index(TEMP, 0x1B)), SD1B)
+    Store (DerefOf(Index(TEMP, 0x1C)), SD1C)
+    Store (DerefOf(Index(TEMP, 0x1D)), SD1D)
+    Store (DerefOf(Index(TEMP, 0x1E)), SD1E)
+    Store (DerefOf(Index(TEMP, 0x1F)), SD1F)
+}
+end;
+//BFWL
+//into method label MHPF code_regex Store\s+\(FB4,\s+SMD0\) replaceall_matched begin \\_SB.PCI0.LPCB.H_EC.WSMD(FB4) end;
+into method label BFWL code_regex Store\s+\(\\_SB\.PCI0\.LPCB\.EC0.\SMD0,\s+FW00\) replaceall_matched begin Store(\\_SB.PCI0.LPCB.EC0.RSMD(), FW00) end;
